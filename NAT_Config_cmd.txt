@@ -1,0 +1,214 @@
+CHE_ROUTER
+=============
+enable
+config t
+Ho CHE_ROUTER
+int fa 0/0
+ip add 10.0.0.1 255.0.0.0
+no sh
+exit
+int fa 0/1
+ip add 20.0.0.1 255.0.0.0
+no sh
+exit
+ip route 0.0.0.0 0.0.0.0 20.0.0.2
+
+HYD_ROUTER
+=============
+enable
+config t
+Ho HYD_ROUTER
+int fa 0/0
+ip add 192.168.1.1 255.255.255.0
+no sh
+exit
+int fa 0/1
+ip add 90.0.0.1 255.0.0.0
+no sh
+exit
+ip route 0.0.0.0 0.0.0.0 90.0.0.2
+
+BNG_ROUTER
+=============
+enable
+config t
+Ho BNG_ROUTER
+int fa 0/0
+ip add 192.168.1.1 255.255.255.0
+no sh
+exit
+int fa 0/1
+ip add 70.0.0.1 255.0.0.0
+no sh
+exit
+ip route 0.0.0.0 0.0.0.0 70.0.0.2
+
+
+PUNE_ROUTER
+=============
+enable
+config t
+Ho PUNE_ROUTER
+int fa 0/0
+ip add 172.16.0.1 255.255.0.0
+no sh
+exit
+int fa 0/1
+ip add 80.0.0.1 255.0.0.0
+no sh
+exit
+ip route 0.0.0.0 0.0.0.0 80.0.0.2
+======================================================================================
+ISP_ROUTER_CONFIGURATION
+------------------------
+ISP_1
+-----
+enable
+config t
+Ho ISP_1
+int fa 0/0
+ip add 20.0.0.2 255.0.0.0
+no sh
+exit
+int fa 0/1
+ip add 90.0.0.2 255.0.0.0
+no sh
+exit
+int eth 1/0
+ip add 30.0.0.1 255.0.0.0
+no sh
+exit
+int eth 1/1
+ip add 60.0.0.2 255.0.0.0
+no sh
+exit
+
+router rip
+network 20.0.0.0
+network 30.0.0.0
+network 90.0.0.0
+network 60.0.0.0
+
+ISP_2
+-----------------------
+enable
+config t
+Ho ISP_2
+int fa 0/0
+ip add 30.0.0.2 255.0.0.0
+no sh
+exit
+int fa 0/1
+ip add 40.0.0.1 255.0.0.0
+no sh
+exit
+router rip
+network 40.0.0.0
+network 30.0.0.0
+
+ISP_3
+---------------------
+enable
+config t
+Ho ISP_3
+int fa 0/0
+ip add 70.0.0.2 255.0.0.0
+no sh
+exit
+int fa 0/1
+ip add 80.0.0.2 255.0.0.0
+no sh
+exit
+int eth 1/0
+ip add 40.0.0.2 255.0.0.0
+no sh
+exit
+int eth 1/1
+ip add 50.0.0.1 255.0.0.0
+no sh
+exit
+
+router rip
+network 40.0.0.0
+network 50.0.0.0
+network 70.0.0.0
+network 80.0.0.0
+
+ISP_4
+---------------------
+enable
+config t
+Ho ISP_4
+int fa 0/0
+ip add 50.0.0.2 255.0.0.0
+no sh
+exit
+int fa 0/1
+ip add 60.0.0.1 255.0.0.0
+no sh
+exit
+router rip
+network 50.0.0.0
+network 60.0.0.0
+
+DYNAMIC OVERLOAD NAT CONFIG (CHENNAI ROUTER)
+-----------------------------
+int fa 0/0
+ip nat inside
+exit
+int fa 0/1
+ip nat outside
+exit
+access-list 10 permit 10.0.0.0 0.255.255.255
+ip nat inside source list 10 int fa 0/1 overload
+
+
+STATIC NAT CONFIG(BNG ROUTER)
+-----------------------------
+int fa 0/0
+ip nat inside
+exit
+int fa 0/1
+ip nat outside
+exit
+ip nat inside source static 192.168.1.10 70.0.0.10
+
+STATIC NAT CONFIG(PUNE ROUTER)
+-----------------------------
+int fa 0/0
+ip nat inside
+exit
+int fa 0/1
+ip nat outside
+exit
+ip nat inside source static 172.16.0.10 80.0.0.10
+ip nat inside source static 172.16.0.20 80.0.0.20
+ip nat inside source static 172.16.0.30 80.0.0.30
+
+DYNAMIC  NAT CONFIG (HYD ROUTER)
+-----------------------------
+int fa 0/0
+ip nat inside
+exit
+int fa 0/1
+ip nat outside
+exit
+access-list 10 permit 192.168.1.0 0.0.0.255
+ip nat pool hyd 90.0.0.11 90.0.0.12 netmask 255.0.0.0
+ip nat inside source list 10 pool hyd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
